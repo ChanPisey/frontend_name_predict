@@ -1,0 +1,385 @@
+:root{
+  --bg: #f6fbff;
+  --text: #101828;
+  --muted: #475467;
+  --border: #e6eef8;
+  --brand: #6f3af2;
+  --brand2: #ff8a00;
+  --chip: #f1f4ff;
+  --shadow: 0 18px 45px rgba(17, 24, 39, .08);
+  --max: 1120px;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  font-family: "Noto Sans Khmer", "Khmer OS Siemreap", "Khmer OS Battambang", system-ui, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #f7fbff 0%, #ffffff 60%);
+}
+
+/* ===== Header / Nav ===== */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(247, 251, 255, .85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.nav{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  color: var(--text);
+  font-weight: 700;
+}
+.brand-text{letter-spacing:.2px}
+.logo{  
+    display: inline-block;
+    width:50px;
+    height:50px;
+    background-image: url("http://127.0.0.1:8000/static/logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Desktop menu */
+.menu{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+.menu a{
+  text-decoration:none;
+  color: var(--muted);
+  font-weight: 750;
+  font-size: 14px;
+  padding:10px 10px;
+  border-radius:12px;
+}
+.menu a:hover{background:#eef5ff;color:#1d2939}
+.menu-login{color:#f97316 !important}
+.menu-register{
+  border: 1px solid var(--border);
+  background:#fff;
+  color:#344054;
+  padding:10px 12px;
+  border-radius:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+.menu-register:hover{box-shadow:0 10px 24px rgba(16, 24, 40, .07)}
+
+/* Mobile hamburger */
+.menu-btn{
+  display:none;
+  width:44px;height:44px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#fff;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:10px;
+}
+.menu-btn span{
+  display:block;
+  height:2px;
+  width:100%;
+  background:#344054;
+  border-radius:2px;
+}
+
+/* ===== Layout ===== */
+.wrap{
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 28px 18px 60px;
+}
+.hero{
+  position:relative;
+  border-radius: 28px;
+  padding: 44px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  overflow:hidden;
+  box-shadow: var(--shadow);
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap: 26px;
+  align-items: start;
+}
+
+/* Abstract background */
+.abstract{
+  position:absolute;
+  right:-120px;
+  top:-90px;
+  width: 560px;
+  height: 560px;
+  opacity:.95;
+  pointer-events:none;
+  filter: drop-shadow(0 24px 40px rgba(111,58,242,.18));
+}
+.abstract::before, .abstract::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 183, 3, .42) 0 30%, transparent 31%),
+    radial-gradient(circle at 65% 35%, rgba(251, 113, 133, .38) 0 34%, transparent 35%),
+    radial-gradient(circle at 45% 65%, rgba(139, 92, 246, .40) 0 38%, transparent 39%),
+    radial-gradient(circle at 70% 75%, rgba(99, 102, 241, .34) 0 36%, transparent 37%);
+  transform: rotate(8deg);
+  border-radius: 36%;
+}
+.abstract::after{
+  inset: 90px;
+  background:
+    radial-gradient(circle at 40% 40%, rgba(111, 58, 242, .28) 0 45%, transparent 46%),
+    radial-gradient(circle at 70% 60%, rgba(255, 138, 0, .22) 0 40%, transparent 41%);
+  transform: rotate(-14deg);
+  border-radius: 45%;
+  opacity: .9;
+}
+
+h1{
+  margin:0 0 10px;
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.12;
+  letter-spacing: -1px;
+}
+.h1-accent{
+  background: linear-gradient(90deg, var(--brand2), var(--brand));
+  -webkit-background-clip: text;
+  background-clip:text;
+  color: transparent;
+  font-weight: 900;
+}
+.h1-rest{font-weight:900;color:#1f2937}
+.subtitle{
+  margin: 0 0 18px;
+  font-size: clamp(16px, 2vw, 20px);
+  color: #1f2937;
+  font-weight: 750;
+}
+
+/* Search */
+.search-row{
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  margin: 16px 0 10px;
+  max-width: 680px;
+}
+.field{
+  flex: 1;
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 12px;
+  box-shadow: 0 10px 26px rgba(16, 24, 40, .05);
+}
+.globe{
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  display:grid;
+  place-items:center;
+  font-size: 14px;
+  background: #eef4ff;
+  border: 1px solid #e2ebff;
+}
+input{
+  border:0;
+  outline:none;
+  font-size: 15px;
+  width: 100%;
+  background: transparent;
+  color: var(--text);
+  font-weight: 650;
+}
+input::placeholder{color:#98a2b3; font-weight:600}
+.btn-primary{
+  border: 0;
+  background: var(--brand);
+  color:white;
+  padding:12px 16px;
+  border-radius:12px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow: 0 16px 40px rgba(111, 58, 242, .25);
+  white-space:nowrap;
+}
+.btn-primary:hover{filter: brightness(1.03)}
+.helper{
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+  max-width: 700px;
+}
+
+/* Chips */
+.chips{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  align-items:center;
+ 
+}
+.label{
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 800;
+}
+.chip{
+  border: 1px solid #dbe6ff;
+  background: var(--chip);
+  color: #3b4a8f;
+  font-weight: 900;
+   font-family: "Noto Sans Khmer", "Khmer OS Siemreap", "Khmer OS Battambang", system-ui, sans-serif;
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor:pointer;
+}
+.chip:hover{filter: brightness(.98)}
+.chip.active{
+  border-color: rgba(111,58,242,.35);
+  background: rgba(111,58,242,.1);
+  color: #3d2aa8;
+}
+
+/* Result */
+.result{
+  margin-top: 16px;
+  max-width: 680px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  display:none;
+  box-shadow: 0 18px 38px rgba(16, 24, 40, .06);
+}
+.result-row{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 10px;
+}
+.badge{
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  color: #344054;
+  white-space:nowrap;
+}
+.result h3{margin:0 0 6px;font-size:16px}
+.result p{margin:0;color:var(--muted);font-size:13px;line-height:1.4}
+
+/* Stats */
+.stats{
+  display:flex;
+  gap: 32px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+.stat{min-width: 140px}
+.stat .num{font-size: 22px;font-weight: 950}
+.stat .cap{font-size: 12px;color: var(--muted);font-weight: 800}
+
+/* Side hint */
+.hint{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, .05);
+}
+.hint-title{font-weight:950;margin-bottom:6px}
+.hint-body{color:var(--muted);line-height:1.55}
+
+/* Sections */
+.section{margin-top: 18px}
+.section-card{
+  border:1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  background:#fff;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, .05);
+}
+.section-card h2{margin:0 0 8px}
+.section-card p{margin:0;color:var(--muted);line-height:1.6}
+
+/* ===== Responsive Breakpoints ===== */
+
+/* Tablet */
+@media (max-width: 920px){
+  .hero{padding: 28px}
+  .hero-grid{grid-template-columns: 1fr; gap: 18px}
+  .hero-right{order: -1}
+}
+
+/* Mobile */
+@media (max-width: 640px){
+  .menu-btn{display:flex}
+  .menu{
+    display:none;
+    position:absolute;
+    right:18px;
+    top:64px;
+    width: min(320px, calc(100vw - 36px));
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 18px 45px rgba(16, 24, 40, .12);
+  }
+  .menu.open{display:flex}
+  .menu a{padding:12px;border-radius:12px;background:#f8fafc}
+  .menu-register{width:100%}
+  .search-row{flex-direction: column; align-items: stretch}
+  .btn-primary{width:100%}
+  .abstract{right:-220px; top:-140px; transform: scale(.85)}
+  .nav{position:relative}
+}
+#nameInput{
+  font-family: "Noto Sans Khmer", "Khmer OS Siemreap", "Khmer OS Battambang", system-ui, sans-serif;
+}
+#guessBtn{
+  font-family: "Noto Sans Khmer", "Khmer OS Siemreap", "Khmer OS Battambang", system-ui, sans-serif;
+}
+.resultBadge {
+  font-family: "Noto Sans Khmer", "Khmer OS Siemreap", "Khmer OS Battambang", system-ui, sans-serif;
+}

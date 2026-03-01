@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="km">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="http://127.0.0.1:8000/static/favicon.ico" sizes="32x32">
+  <title>ពិនិត្យភេទតាមឈ្មោះ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* API status badge */
+    .api-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      border: 1px solid transparent;
+    }
+    .api-badge.online  { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
+    .api-badge.offline { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+  </style>
+</head>
+
+<body>
+<header class="site-header">
+  <div class="nav">
+    <a class="brand" href="#">
+     <span class="logo" aria-hidden="true"></span>
+      <span class="brand-text">ការពិនិត្យភេទតាមរយៈឈ្មោះ</span>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="បើកម៉ឺនុយ" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="menu" id="menu">
+      <a href="#features">មុខងារ</a>
+      <a href="#docs">ឯកសារ API</a>
+      <a href="#pricing">អំពី</a>
+      <a class="menu-login" href="#login">ចូលប្រើ</a>
+      <button class="menu-register" type="button" id="registerBtn">ចុះឈ្មោះ</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="abstract" aria-hidden="true"></div>
+
+    <div class="hero-grid">
+      <div class="hero-left">
+
+        <!-- API status -->
+        <div id="apiStatus" class="api-badge">កំពុងពិនិត្យ API…</div>
+
+        <h1>
+          <span class="h1-accent">Gender Name</span>
+          <span class="h1-rest"> (ខ្មែរ)</span>
+        </h1>
+        <p class="subtitle">កំណត់ថា ឈ្មោះនេះជា ប្រុស ឬ ស្រី</p>
+
+        <div class="search-row" role="search">
+          <div class="field">
+            <div class="globe" aria-hidden="true">🌍</div>
+            <input id="nameInput" type="text"
+                   placeholder="ឈ្មោះ (ឬពាក្យដំបូងនៃឈ្មោះពេញ) *"
+                   autocomplete="off" />
+          </div>
+          <button class="btn-primary" id="guessBtn" type="button">ស្វែងរក</button>
+        </div>
+        <div class="chips" aria-label="មុខងារពេញនិយម">
+          <span class="label">មុខងារ:</span>
+          <button class="chip active" data-mode="gender"    type="button">ភេទ</button>
+          <button class="chip"        data-mode="split"     type="button">បំបែកឈ្មោះ</button>
+        </div>
+
+        <div class="result" id="resultBox" aria-live="polite">
+          <div class="result-row">
+            <div>
+              <h3 id="resultTitle">លទ្ធផល</h3>
+              <p id="resultDesc">…</p>
+            </div>
+            <div class="badge" id="resultBadge">ភាពទុកចិត្ត: --</div>
+          </div>
+        </div>
+        <!-- <div class="stats" aria-label="ស្ថិតិ">
+          <div class="stat">
+            <div class="num">KCC</div>
+            <div class="cap">Khmer Character Cluster</div>
+          </div>
+          <div class="stat">
+            <div class="num">BiLSTM</div>
+            <div class="cap">Deep Learning Model</div>
+          </div>
+          <div class="stat">
+            <div class="num">FastText</div>
+            <div class="cap">Embedding Layer</div>
+          </div>
+        </div> -->
+      </div>
+
+      <aside class="hero-right">
+        <div class="hint">
+          <div class="hint-title">របៀបប្រើ</div>
+          <div class="hint-body">
+            ១. វាយឈ្មោះខ្មែរ ហើយចុច <strong>ស្វែងរក</strong><br/><br/>
+            ២. លទ្ធផលនឹងបង្ហាញភេទ + ភាពទុកចិត្ត + ការបំបែកពាក្យ
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section-card">
+      <h3>រក្សាសិទ្ធដោយ</h3>
+     <p>© <span id="year"></span></p>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+<script>
+  const year = new Date().getFullYear();
+  document.getElementById("year").textContent = year;
+</script>
+</body>
+</html>
