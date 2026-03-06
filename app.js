@@ -162,7 +162,7 @@ async function render() {
     resultBadge.style.color       = '';
   } finally {
     guessBtn.disabled    = false;
-    guessBtn.textContent = 'ស្វែងរក';
+    guessBtn.textContent = 'ទស្សន៏ទាយ';
     resultBox.style.display = 'block';
   }
 }
