@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="km">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="http://127.0.0.1:8000/static/favicon.ico" sizes="32x32">
+  <title>អំពី — ការទស្សន៏ទាយភេទ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+<header class="site-header">
+  <div class="nav">
+    <a class="brand" href="index.html">
+      <span class="logo" aria-hidden="true"></span>
+      <span class="brand-text">ការទស្សន៏ទាយភេទតាមរយៈឈ្មោះ</span>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="បើកម៉ឺនុយ" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="menu" id="menu">
+      <a href="features.html">មុខងារ</a>
+      <a href="api.html">ទាញយក API</a>
+      <a href="about.html" style="color:var(--brand)">អំពី</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="section">
+    <div class="section-card">
+      <h3>អំពីគម្រោង</h3>
+      <p>
+        គម្រោងនេះត្រូវបានបង្កើតឡើងដើម្បីជួយកំណត់ភេទតាមរយៈឈ្មោះខ្មែរ
+        ដោយប្រើប្រាស់បញ្ញាសិប្បនិម្មិត។ ឈ្មោះខ្មែរជាច្រើនមានលក្ខណៈពិសេស
+        ដែលអាចបង្ហាញពីភេទបានដោយប្រយោល ប៉ុន្តែការវិភាគដោយដៃច្រើនតែចំណាយ
+        ពេលវេលា និងកំហុសអាចកើតមានបាន។
+      </p>
+      <p>
+        ដោយប្រើប្រាស់បច្ចេកវិទ្យា AI ដ៏ទំនើប ប្រព័ន្ធអាចទស្សន៍ទាយភេទ
+        ប្រកបដោយភាពត្រឹមត្រូវ និងភាពឆាប់រហ័ស ដោយមិនចាំបាច់ពឹងផ្អែកលើ
+        មនុស្សក្នុងការកំណត់ឡើយ។
+      </p>
+      <p>
+        គម្រោងនេះមានប្រយោជន៍សម្រាប់ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ
+        ការស្រាវជ្រាវ ក៏ដូចជាកម្មវិធីដែលត្រូវការចាត់ថ្នាក់ភេទ
+        ពីឈ្មោះអ្នកប្រើប្រាស់ជាភាសាខ្មែរ។
+      </p>
+      <p style="margin-top:1rem;padding:12px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;color:#9a3412;font-size:14px">
+        គម្រោងនេះត្រូវបានបង្កើតឡើងសម្រាប់គោលបំណងស្រាវជ្រាវវិទ្យាសាស្ត្រដើម្បីបញ្ចប់ថ្នាក់អនុបណ្ឌិតតែប៉ុណ្ណោះ។
+        លទ្ធផលទាំងឡាយដែលទទួលបានពីប្រព័ន្ធ មិនអាចយកទៅប្រើប្រាស់ជាការសន្និដ្ឋានផ្លូវការបានឡើយ។
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-card">
+      <h3>រក្សាសិទ្ធដោយ</h3>
+      <p>© <span id="year"></span></p>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const menuBtn = document.getElementById('menuBtn');
+  const menu    = document.getElementById('menu');
+  if (menuBtn && menu) {
+    menuBtn.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open);
+    });
+  }
+</script>
+</body>
+</html>

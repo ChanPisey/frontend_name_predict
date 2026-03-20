@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="icon" type="image/png" href="http://127.0.0.1:8000/static/favicon.ico" sizes="32x32">
-  <title>ពិនិត្យភេទតាមឈ្មោះ</title>
+  <title>ទាយភេទ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -32,18 +32,16 @@
   <div class="nav">
     <a class="brand" href="#">
      <span class="logo" aria-hidden="true"></span>
-      <span class="brand-text">ការពិនិត្យភេទតាមរយៈឈ្មោះ</span>
+      <span class="brand-text">ការទស្សន៏ទាយភេទតាមរយៈឈ្មោះ</span>
     </a>
     <button class="menu-btn" id="menuBtn" type="button" aria-label="បើកម៉ឺនុយ" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
 
     <nav class="menu" id="menu">
-      <a href="#features">មុខងារ</a>
-      <a href="#docs">ឯកសារ API</a>
-      <a href="#pricing">អំពី</a>
-      <a class="menu-login" href="#login">ចូលប្រើ</a>
-      <button class="menu-register" type="button" id="registerBtn">ចុះឈ្មោះ</button>
+      <a href="features.html">មុខងារ</a>
+      <a href="api.html">ទាញយក API</a>
+      <a href="about.html">អំពី</a>
     </nav>
   </div>
 </header>
@@ -73,11 +71,6 @@
           </div>
           <button class="btn-primary" id="guessBtn" type="button">ស្វែងរក</button>
         </div>
-        <div class="chips" aria-label="មុខងារពេញនិយម">
-          <span class="label">មុខងារ:</span>
-          <button class="chip active" data-mode="gender"    type="button">ភេទ</button>
-          <button class="chip"        data-mode="split"     type="button">បំបែកឈ្មោះ</button>
-        </div>
 
         <div class="result" id="resultBox" aria-live="polite">
           <div class="result-row">
@@ -88,28 +81,15 @@
             <div class="badge" id="resultBadge">ភាពទុកចិត្ត: --</div>
           </div>
         </div>
-        <!-- <div class="stats" aria-label="ស្ថិតិ">
-          <div class="stat">
-            <div class="num">KCC</div>
-            <div class="cap">Khmer Character Cluster</div>
-          </div>
-          <div class="stat">
-            <div class="num">BiLSTM</div>
-            <div class="cap">Deep Learning Model</div>
-          </div>
-          <div class="stat">
-            <div class="num">FastText</div>
-            <div class="cap">Embedding Layer</div>
-          </div>
-        </div> -->
+        Out-of-Vocabulary (OOV) words in NLP are terms encountered during testing or inference that were not present in the model’s training vocabulary
       </div>
 
       <aside class="hero-right">
         <div class="hint">
           <div class="hint-title">របៀបប្រើ</div>
           <div class="hint-body">
-            ១. វាយឈ្មោះខ្មែរ ហើយចុច <strong>ស្វែងរក</strong><br/><br/>
-            ២. លទ្ធផលនឹងបង្ហាញភេទ + ភាពទុកចិត្ត + ការបំបែកពាក្យ
+            ១. វាយឈ្មោះខ្មែរ ហើយចុច <strong>ទស្សន៏ទាយ</strong><br/><br/>
+            ២. លទ្ធផលនឹងបង្ហាញភេទ និងភាពទុកចិត្ត
           </div>
         </div>
       </aside>
@@ -119,7 +99,7 @@
   <section class="section" id="features">
     <div class="section-card">
       <h3>រក្សាសិទ្ធដោយ</h3>
-     <p>© <span id="year"></span></p>
+      <p>© <span id="year"></span></p>
     </div>
   </section>
 </main>

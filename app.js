@@ -32,17 +32,6 @@ if (menuBtn && menu) {
   });
 }
 
-// ── Mode chips ────────────────────────────────────────────────────────────────
-let currentMode = 'gender';
-document.querySelectorAll('.chip[data-mode]').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.chip[data-mode]').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    currentMode = chip.dataset.mode;
-    resultBox.style.display = 'none';
-  });
-});
-
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function sanitizeName(s) {
   return (s || '').trim();
@@ -86,14 +75,6 @@ function guessGender(name) {
   return { label: 'male', confidence: 0.55 };
 }
 
-// ── Fallback helpers ──────────────────────────────────────────────────────────
-function fakeOrigin(name) {
-  return { hint: 'ប្រហែលជាឈ្មោះខ្មែរ (demo)', confidence: 0.5 };
-}
-function splitName(name) {
-  return { parts: name.split(/\s+/).filter(Boolean), confidence: 0.9 };
-}
-
 // ── Main render ───────────────────────────────────────────────────────────────
 async function render() {
   const raw   = nameInput.value;
@@ -117,14 +98,7 @@ async function render() {
 
   const token = clean;
 
-  // Non-gender modes use local demo logic immediately
-  if (currentMode !== 'gender') {
-    renderLocalMode(clean, token);
-    resultBox.style.display = 'block';
-    return;
-  }
-
-  // ── Gender mode: try API first ────────────────────────────────────────────
+  // ── Try API ────────────────────────────────────────────────────────────────
   guessBtn.disabled    = true;
   guessBtn.textContent = '…';
   resultBox.style.display = 'none';
@@ -132,19 +106,15 @@ async function render() {
   try {
     const data = await predictFromAPI(clean);
 
-    const isMale   = data.gender === 'Male';
-    const pct      = data.confidence; // already 0-100
-    const kccsText = Array.isArray(data.kccs) ? data.kccs.join(' + ') : '';
+    const isMale = data.gender === 'Male';
+    const pct    = data.confidence; // already 0-100
 
     resultTitle.innerHTML =
       `<span style="color:${isMale ? '#2563eb' : '#db2777'};font-weight:900">` +
       `${isMale ? '♂ ប្រុស' : '♀ ស្រី'}` +
       `</span> — "${token}"`;
 
-    resultDesc.innerHTML =
-      kccsText
-        ? `<span style="font-family:'Khmer OS',serif;font-size:15px">${kccsText}</span>`
-        : 'ទំនាយភេទតាម AI Model (KCC + FastText + BiLSTM)';
+    resultDesc.innerHTML = 'ទំនាយភេទតាម AI Model';
 
     resultBadge.textContent = `ភាពទុកចិត្ត: ${typeof pct === 'number' ? pct.toFixed(1) : pct}%`;
     resultBadge.style.borderColor = isMale ? '#bfdbfe' : '#fbcfe8';
@@ -162,25 +132,8 @@ async function render() {
     resultBadge.style.color       = '';
   } finally {
     guessBtn.disabled    = false;
-    guessBtn.textContent = 'ស្វែងរក';
+    guessBtn.textContent = 'ទស្សន៏ទាយ';
     resultBox.style.display = 'block';
-  }
-}
-
-function renderLocalMode(clean, token) {
-  if (currentMode === 'origin') {
-    const o = fakeOrigin(clean);
-    resultTitle.textContent = `ប្រភពឈ្មោះ "${token}"`;
-    resultDesc.textContent  = o.hint;
-    resultBadge.textContent = `ភាពទុកចិត្ត: ${(o.confidence * 100).toFixed(0)}%`;
-  
-  } else if (currentMode === 'split') {
-    const s = splitName(clean);
-    resultTitle.textContent = 'បំបែកឈ្មោះ';
-    resultDesc.textContent  = s.parts.length
-      ? `ផ្នែក: ${s.parts.map(p => `"${p}"`).join(', ')}`
-      : 'រកមិនឃើញផ្នែកណាទេ។';
-    resultBadge.textContent = `ភាពទុកចិត្ត: ${(s.confidence * 100).toFixed(0)}%`;
   }
 }
 
