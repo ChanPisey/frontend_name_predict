@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8000';
+const API_URL = window.location.origin;
 
 // ── DOM refs ──────────────────────────────────────────────────────────────────
 const nameInput   = document.getElementById('nameInput');
@@ -10,15 +10,12 @@ const resultBadge = document.getElementById('resultBadge');
 const apiStatus   = document.getElementById('apiStatus');
 
 // ── Khmer-only validation ─────────────────────────────────────────────────────
-// Khmer block: U+1780–U+17FF (letters + signs). Allow spaces.
-// If you want to allow Khmer numerals too, they are also in this block.
-const KHMER_ONLY_REGEX = /^[\u1780-\u17FF\s]+$/;
+const KHMER_ONLY_REGEX   = /^[\u1780-\u17FF\s]+$/;
 const KHMER_FILTER_REGEX = /[^\u1780-\u17FF\s]/g;
 
-// Optional: auto-remove non-Khmer characters while typing (best UX)
 nameInput.addEventListener('input', () => {
   const before = nameInput.value;
-  const after = before.replace(KHMER_FILTER_REGEX, '');
+  const after  = before.replace(KHMER_FILTER_REGEX, '');
   if (before !== after) nameInput.value = after;
 });
 
@@ -32,11 +29,6 @@ if (menuBtn && menu) {
   });
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function sanitizeName(s) {
-  return (s || '').trim();
-}
-
 // ── API health check ──────────────────────────────────────────────────────────
 async function checkAPIHealth() {
   if (!apiStatus) return;
@@ -44,8 +36,8 @@ async function checkAPIHealth() {
     const res  = await fetch(`${API_URL}/health`);
     const data = await res.json();
     if (data.status === 'healthy') {
-      apiStatus.className     = 'api-badge online';
-      apiStatus.textContent   = 'ដំណើរការ';
+      apiStatus.className   = 'api-badge online';
+      apiStatus.textContent = 'ដំណើរការ';
     } else {
       throw new Error('not healthy');
     }
@@ -56,7 +48,7 @@ async function checkAPIHealth() {
 }
 checkAPIHealth();
 
-// ── Real API predict ──────────────────────────────────────────────────────────
+// ── API predict ───────────────────────────────────────────────────────────────
 async function predictFromAPI(name) {
   const res = await fetch(`${API_URL}/predict`, {
     method:  'POST',
@@ -75,61 +67,61 @@ function guessGender(name) {
   return { label: 'male', confidence: 0.55 };
 }
 
-// ── Main render ───────────────────────────────────────────────────────────────
+// ── Render result ─────────────────────────────────────────────────────────────
+function setResultTitle(genderLabel, color, token) {
+  resultTitle.textContent = '';
+  const span = document.createElement('span');
+  span.style.cssText = `color:${color};font-weight:900`;
+  span.textContent   = genderLabel;
+  resultTitle.appendChild(span);
+  resultTitle.append(` — "${token}"`);
+}
+
 async function render() {
-  const raw   = nameInput.value;
-  const clean = sanitizeName(raw);
+  const clean = nameInput.value.trim();
 
   if (!clean) {
     resultBox.style.display = 'none';
     return;
   }
 
-  // ✅ Validate Khmer-only (block API calls if invalid)
   if (!KHMER_ONLY_REGEX.test(clean)) {
-    resultBox.style.display = 'block';
-    resultTitle.textContent = 'បញ្ចូលមិនត្រឹមត្រូវ';
-    resultDesc.textContent  = 'សូមបញ្ចូលអក្សរខ្មែរ ប៉ុណ្ណោះ (មិនអនុញ្ញាតអក្សរឡាតាំង លេខ ឬសញ្ញា)';
-    resultBadge.textContent = '';
+    resultBox.style.display  = 'block';
+    resultTitle.textContent  = 'បញ្ចូលមិនត្រឹមត្រូវ';
+    resultDesc.textContent   = 'សូមបញ្ចូលអក្សរខ្មែរ ប៉ុណ្ណោះ (មិនអនុញ្ញាតអក្សរឡាតាំង លេខ ឬសញ្ញា)';
+    resultBadge.textContent  = '';
     resultBadge.style.borderColor = '';
-    resultBadge.style.color = '';
+    resultBadge.style.color       = '';
     return;
   }
 
-  const token = clean;
-
-  // ── Try API ────────────────────────────────────────────────────────────────
   guessBtn.disabled    = true;
   guessBtn.textContent = '…';
   resultBox.style.display = 'none';
 
   try {
-    const data = await predictFromAPI(clean);
-
+    const data   = await predictFromAPI(clean);
     const isMale = data.gender === 'Male';
-    const pct    = data.confidence; // already 0-100
+    const pct    = data.confidence;
+    const color  = isMale ? '#2563eb' : '#db2777';
 
-    resultTitle.innerHTML =
-      `<span style="color:${isMale ? '#2563eb' : '#db2777'};font-weight:900">` +
-      `${isMale ? '♂ ប្រុស' : '♀ ស្រី'}` +
-      `</span> — "${token}"`;
-
-    resultDesc.innerHTML = 'ទំនាយភេទតាម AI Model';
-
-    resultBadge.textContent = `ភាពទុកចិត្ត: ${typeof pct === 'number' ? pct.toFixed(1) : pct}%`;
+    setResultTitle(isMale ? '♂ ប្រុស' : '♀ ស្រី', color, clean);
+    resultDesc.textContent   = 'ទំនាយភេទតាម AI Model';
+    resultBadge.textContent  = `ភាពទុកចិត្ត: ${typeof pct === 'number' ? pct.toFixed(1) : pct}%`;
     resultBadge.style.borderColor = isMale ? '#bfdbfe' : '#fbcfe8';
     resultBadge.style.color       = isMale ? '#1d4ed8' : '#be185d';
 
   } catch {
     const g = guessGender(clean);
-    resultTitle.textContent = `លទ្ធផលភេទ (demo) "${token}"`;
-    resultDesc.textContent  =
+    resultTitle.textContent  = `លទ្ធផលភេទ (demo) "${clean}"`;
+    resultDesc.textContent   =
       g.label === 'unknown'
         ? 'មិនអាចកំណត់បាន'
-        : `ទាយថា: ${g.label === 'male' ? 'ប្រុស' : 'ស្រី'}  — demo, API មិនអាចប្រើបាន`;
-    resultBadge.textContent = `ភាពទុកចិត្ត: ${(g.confidence * 100).toFixed(0)}%`;
+        : `ទាយថា: ${g.label === 'male' ? 'ប្រុស' : 'ស្រី'} — demo, API មិនអាចប្រើបាន`;
+    resultBadge.textContent       = `ភាពទុកចិត្ត: ${(g.confidence * 100).toFixed(0)}%`;
     resultBadge.style.borderColor = '';
     resultBadge.style.color       = '';
+
   } finally {
     guessBtn.disabled    = false;
     guessBtn.textContent = 'ទស្សន៏ទាយ';

@@ -1,42 +1,83 @@
 """
 FastAPI Application for Khmer Gender Classification
 """
-from fastapi import FastAPI, HTTPException
+import logging
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
 from typing import List, Optional
 import uvicorn
+
 from predictor import GenderPredictor
-from fastapi import FastAPI
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-# Initialize FastAPI app
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logger = logging.getLogger(__name__)
+
+# ── Rate limiter ──────────────────────────────────────────────────────────────
+limiter = Limiter(key_func=get_remote_address)
+
+# ── Global predictor ──────────────────────────────────────────────────────────
+predictor: GenderPredictor | None = None
+
+
+# ── Lifespan ──────────────────────────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global predictor
+    logger.info("Loading model...")
+    try:
+        predictor = GenderPredictor(
+            model_path="optimized_gender_model.pt",
+            kcc2idx_path="kcc2idx.json",
+            fasttext_path="cc.km.300.vec.gz",
+        )
+        logger.info("Model loaded successfully!")
+    except Exception as e:
+        logger.error("Error loading model: %s", e)
+        raise
+    yield
+    predictor = None
+
+
+# ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(
     title="Khmer Gender Classification API",
-    description="Gender classification for Khmer first names using KCC + FastText + BiLSTM",
-    version="1.0.0"
+    description="Gender classification for Khmer first names using Deep Learning",
+    version="1.0.0",
+    lifespan=lifespan,
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.mount("/static", StaticFiles(directory="static"), name="static")
-# Add CORS middleware
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=[
+        "https://www.genderpredictionkhmer.site",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
-# Global predictor instance
-predictor = None
 
-
-# Request/Response Models
+# ── Request / Response Models ─────────────────────────────────────────────────
 class PredictionRequest(BaseModel):
-    name: str = Field(..., description="Khmer first name", example="ចន្ទា")
+    name: str = Field(..., min_length=1, max_length=200, description="Khmer first name", example="ចន្ទា")
 
 
 class BatchPredictionRequest(BaseModel):
-    names: List[str] = Field(..., description="List of Khmer first names", example=["ចន្ទា", "សុខ"])
+    names: List[str] = Field(..., min_length=1, max_length=100, description="List of Khmer first names")
 
 
 class PredictionResponse(BaseModel):
@@ -59,106 +100,71 @@ class HealthResponse(BaseModel):
     device: str
 
 
-@app.on_event("startup")
-async def startup_event():
-    """Load the model on startup"""
-    global predictor
-    print("Loading model...")
-    try:
-        predictor = GenderPredictor(
-            model_path="optimized_gender_model.pt",
-            kcc2idx_path="kcc2idx.json",
-            fasttext_path="cc.km.300.vec.gz"
-        )
-        print("✓ Model loaded successfully!")
-    except Exception as e:
-        print(f"✗ Error loading model: {e}")
-        raise
-
-
-@app.get("/", response_model=dict)
+# ── Routes ────────────────────────────────────────────────────────────────────
+@app.get("/")
 async def root():
-    """Root endpoint"""
-    return {
-        "message": "Khmer Gender Classification API",
-        "version": "1.0.0",
-        "endpoints": {
-            "health": "/health",
-            "predict": "/predict (POST)",
-            "batch_predict": "/batch_predict (POST)",
-            "docs": "/docs"
-        }
-    }
+    return FileResponse("index.html")
+
+
+@app.get("/api.html")
+async def api_page():
+    return FileResponse("api.html")
+
+
+@app.get("/features.html")
+async def features_page():
+    return FileResponse("features.html")
+
+
+@app.get("/about.html")
+async def about_page():
+    return FileResponse("about.html")
+
+
+@app.get("/app.js")
+async def app_js():
+    return FileResponse("app.js", media_type="application/javascript")
 
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
-    """Health check endpoint"""
     return {
         "status": "healthy" if predictor is not None else "unhealthy",
         "model_loaded": predictor is not None,
-        "device": str(predictor.device) if predictor else "N/A"
+        "device": str(predictor.device) if predictor else "N/A",
     }
 
 
 @app.post("/predict", response_model=PredictionResponse)
-async def predict(request: PredictionRequest):
-    """
-    Predict gender for a single Khmer first name
-
-    Args:
-        request: PredictionRequest containing the name
-
-    Returns:
-        PredictionResponse with gender prediction
-    """
+@limiter.limit("30/minute")
+async def predict(request: Request, body: PredictionRequest):
     if predictor is None:
         raise HTTPException(status_code=503, detail="Model not loaded")
 
-    if not request.name or not request.name.strip():
-        raise HTTPException(status_code=400, detail="Name cannot be empty")
-
     try:
-        result = predictor.predict(request.name)
+        result = predictor.predict(body.name)
         return result
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
+        logger.error("Prediction error: %s", e)
+        raise HTTPException(status_code=500, detail="Prediction failed")
 
 
 @app.post("/batch_predict", response_model=BatchPredictionResponse)
-async def batch_predict(request: BatchPredictionRequest):
-    """
-    Predict gender for multiple Khmer first names
-
-    Args:
-        request: BatchPredictionRequest containing list of names
-
-    Returns:
-        BatchPredictionResponse with predictions for all names
-    """
+@limiter.limit("10/minute")
+async def batch_predict(request: Request, body: BatchPredictionRequest):
     if predictor is None:
         raise HTTPException(status_code=503, detail="Model not loaded")
 
-    if not request.names:
-        raise HTTPException(status_code=400, detail="Names list cannot be empty")
-
-    if len(request.names) > 100:
+    if len(body.names) > 100:
         raise HTTPException(status_code=400, detail="Maximum 100 names per batch request")
 
     try:
-        results = predictor.batch_predict(request.names)
-        return {
-            "predictions": results,
-            "count": len(results)
-        }
+        results = predictor.batch_predict(body.names)
+        return {"predictions": results, "count": len(results)}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Batch prediction error: {str(e)}")
+        logger.error("Batch prediction error: %s", e)
+        raise HTTPException(status_code=500, detail="Batch prediction failed")
+
 
 if __name__ == "__main__":
-    # Run the app
-    uvicorn.run(
-        "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True
-    )
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)

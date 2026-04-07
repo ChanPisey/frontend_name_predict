@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" type="image/png" href="http://127.0.0.1:8000/static/favicon.ico" sizes="32x32">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https://www.genderpredictionkhmer.site https://cloudflareinsights.com; img-src 'self' data:;" />
+  <link rel="icon" type="image/png" href="/static/favicon.ico" sizes="32x32">
   <title>ទាយភេទ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/static/style.css" />
   <style>
     /* API status badge */
     .api-badge {
@@ -30,7 +31,7 @@
 <body>
 <header class="site-header">
   <div class="nav">
-    <a class="brand" href="#">
+    <a class="brand" href="/">
      <span class="logo" aria-hidden="true"></span>
       <span class="brand-text">ការទស្សន៏ទាយភេទតាមរយៈឈ្មោះ</span>
     </a>
@@ -69,7 +70,7 @@
                    placeholder="ឈ្មោះ (ឬពាក្យដំបូងនៃឈ្មោះពេញ) *"
                    autocomplete="off" />
           </div>
-          <button class="btn-primary" id="guessBtn" type="button">ស្វែងរក</button>
+          <button class="btn-primary" id="guessBtn" type="button">ទស្សន៏ទាយ</button>
         </div>
 
         <div class="result" id="resultBox" aria-live="polite">
@@ -99,7 +100,7 @@
   <section class="section" id="features">
     <div class="section-card">
       <h3>រក្សាសិទ្ធដោយ</h3>
-      <p>© <span id="year"></span></p>
+        <p>© <span id="year"></span> genderpredictionkhmer</p>
     </div>
   </section>
 </main>

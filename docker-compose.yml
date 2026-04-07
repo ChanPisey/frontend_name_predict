@@ -1,0 +1,29 @@
+services:
+  gender-prediction-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gender-prediction-api
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('https://www.genderpredictionkhmer.site/docs')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: >
+      tunnel --no-autoupdate run 
+      --token eyJhIjoiZjU5ZGQyNTAzYTM1MDQwNTExN2E2M2NiZTJhNjc0NTMiLCJ0IjoiNTVlMTdmYjUtMzM5MC00ZjFkLTg5YzQtYjczNWVjZmUxMmEwIiwicyI6Ik1EaGxaVFUyWkRZdFkySmpNQzAwWW1Oa0xUazFOMkl0WlRsbFptRm1NekU1TldReSJ9
