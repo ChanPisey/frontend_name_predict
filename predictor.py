@@ -39,7 +39,7 @@ class GenderPredictor:
         self.HIDDEN_DIM = 128
         self.NUM_LAYERS = 5
         self.DROPOUT = 0.3
-        self.MAX_LEN = 30
+        self.MAX_LEN = 20
 
         self.model_path = Path(model_path)
 
@@ -112,18 +112,14 @@ class GenderPredictor:
             e1 = err
             print(f"⚠️ weights_only=True load failed: {e1}")
 
-        # Fallback: legacy unpickling (ONLY if you trust your checkpoint)
-        state = _try_load(weights_only=False)
-        try:
-            self._apply_state_dict(model, state)
-            return
-        except Exception as e2:
-            raise RuntimeError(
-                f"❌ Failed to load checkpoint: {path}\n"
-                f"weights_only=True error: {e1}\n"
-                f"weights_only=False error: {e2}\n"
-                f"Tip: Prefer saving float weights: torch.save(model.state_dict(), 'best_gender_model_state_dict.pt')"
-            )
+        # Do NOT fall back to weights_only=False — it allows arbitrary code execution
+        # via pickle. Re-save your checkpoint with:
+        #   torch.save(model.state_dict(), 'optimized_gender_model.pt')
+        raise RuntimeError(
+            f"❌ Failed to load checkpoint safely: {path}\n"
+            f"weights_only=True error: {e1}\n"
+            f"Fix: re-save the model with torch.save(model.state_dict(), path)"
+        )
 
     def _apply_state_dict(self, model: torch.nn.Module, state):
         """

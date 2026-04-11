@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="km">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https://www.genderpredictionkhmer.site https://cloudflareinsights.com; img-src 'self' data:;" />
+  <link rel="icon" type="image/png" href="/static/favicon.ico" sizes="32x32">
+  <title>មុខងារ — ការទស្សន៏ទាយភេទ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+<header class="site-header">
+  <div class="nav">
+    <a class="brand" href="/">
+      <span class="logo" aria-hidden="true"></span>
+      <span class="brand-text">ការទស្សន៏ទាយភេទតាមរយៈឈ្មោះ</span>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="បើកម៉ឺនុយ" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="menu" id="menu">
+      <a href="features.html" style="color:var(--brand)">មុខងារ</a>
+      <a href="api.html">ទាញយក API</a>
+      <a href="about.html">អំពី</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="section">
+    <div class="section-card">
+      <h3>មុខងារ</h3>
+      <p>ប្រព័ន្ធនេះផ្តល់មុខងារសំខាន់ៗដូចខាងក្រោម ដើម្បីជួយអ្នកប្រើប្រាស់
+         និងអ្នកអភិវឌ្ឍន៍ដោយងាយស្រួល។</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:1.4rem">
+
+        <div style="border:1px solid var(--border);border-radius:14px;padding:18px;background:#f9fafb">
+          <div style="font-size:28px;margin-bottom:8px">🔍</div>
+          <h4 style="margin:0 0 6px">ទស្សន៍ទាយឈ្មោះតែមួយ</h4>
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">
+            វាយឈ្មោះខ្មែរ ហើយទទួលបានលទ្ធផលភ្លាមៗ
+            ថាជាភេទប្រុស ឬស្រី រួមជាមួយភាពទុកចិត្ត។
+          </p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:14px;padding:18px;background:#f9fafb">
+          <div style="font-size:28px;margin-bottom:8px">📋</div>
+          <h4 style="margin:0 0 6px">ទស្សន៍ទាយជាក្រុម</h4>
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">
+            ផ្ញើបញ្ជីឈ្មោះអតិបរមា ១០០ ក្នុងមួយលើក
+            ដើម្បីទទួលបានការទស្សន៍ទាយភ្លាមៗទាំងអស់។
+          </p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:14px;padding:18px;background:#f9fafb">
+          <div style="font-size:28px;margin-bottom:8px">⚡</div>
+          <h4 style="margin:0 0 6px">លឿន និងត្រឹមត្រូវ</h4>
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">
+            ប្រើប្រាស់ AI ដ៏ទំនើបដែលបានបណ្តុះបណ្តាល
+            ជាពិសេសសម្រាប់ឈ្មោះខ្មែរ ផ្តល់លទ្ធផលភ្លាមៗ។
+          </p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:14px;padding:18px;background:#f9fafb">
+          <div style="font-size:28px;margin-bottom:8px">🔗</div>
+          <h4 style="margin:0 0 6px">API សម្រាប់អ្នកអភិវឌ្ឍន៍</h4>
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">
+            ភ្ជាប់ API ទៅកាន់កម្មវិធីរបស់អ្នកតាម
+            JavaScript, Python ឬភាសាណាក៏បាន។
+          </p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:14px;padding:18px;background:#f9fafb">
+          <div style="font-size:28px;margin-bottom:8px">🌐</div>
+          <h4 style="margin:0 0 6px">ជាភាសាខ្មែរ</h4>
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">
+            ប្រព័ន្ធត្រូវបានបង្កើតឡើងដើម្បីគាំទ្រ
+            ឈ្មោះខ្មែរដោយផ្ទាល់ មិនតម្រូវការបកប្រែ។
+          </p>
+        </div>
+
+        <div style="border:1px solid var(--border);border-radius:14px;padding:18px;background:#f9fafb">
+          <div style="font-size:28px;margin-bottom:8px">📊</div>
+          <h4 style="margin:0 0 6px">ភាពទុកចិត្ត</h4>
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">
+            លទ្ធផលរាល់ការទស្សន៍ទាយ មានភាពទុកចិត្ត
+            ជាភាគរយ ដើម្បីឱ្យអ្នកប្រើបានវាយតម្លៃ។
+          </p>
+        </div>
+
+      </div>
+
+      <div style="margin-top:1.6rem;text-align:center">
+        <a href="/" style="display:inline-block;background:var(--brand);color:#fff;padding:12px 28px;border-radius:12px;text-decoration:none;font-weight:900;box-shadow:0 16px 40px rgba(111,58,242,.25)">
+          សាកល្បងឥឡូវ
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-card">
+      <h3>រក្សាសិទ្ធដោយ</h3>
+     <p>© <span id="year"></span> genderpredictionkhmer</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const menuBtn = document.getElementById('menuBtn');
+  const menu    = document.getElementById('menu');
+  if (menuBtn && menu) {
+    menuBtn.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open);
+    });
+  }
+</script>
+</body>
+</html>

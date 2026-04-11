@@ -3,27 +3,26 @@ FastAPI Application for Khmer Gender Classification
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import List, Optional
 import uvicorn
 from predictor import GenderPredictor
-from fastapi import FastAPI
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 # Initialize FastAPI app
 app = FastAPI(
     title="Khmer Gender Classification API",
-    description="Gender classification for Khmer first names using KCC + FastText + BiLSTM",
+    description="Gender classification for Khmer first names using Deep Learning",
     version="1.0.0"
 )
 app.mount("/static", StaticFiles(directory="static"), name="static")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_origins=["*"],
+    allow_credentials=False,  # Must be False when allow_origins=["*"]
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 # Global predictor instance
@@ -32,7 +31,7 @@ predictor = None
 
 # Request/Response Models
 class PredictionRequest(BaseModel):
-    name: str = Field(..., description="Khmer first name", example="ចន្ទា")
+    name: str = Field(..., description="Khmer first name", example="ចន្ទា", max_length=100)
 
 
 class BatchPredictionRequest(BaseModel):
@@ -76,19 +75,30 @@ async def startup_event():
         raise
 
 
-@app.get("/", response_model=dict)
+@app.get("/", response_class=FileResponse)
 async def root():
-    """Root endpoint"""
-    return {
-        "message": "Khmer Gender Classification API",
-        "version": "1.0.0",
-        "endpoints": {
-            "health": "/health",
-            "predict": "/predict (POST)",
-            "batch_predict": "/batch_predict (POST)",
-            "docs": "/docs"
-        }
-    }
+    """Serve the main frontend page"""
+    return FileResponse("index.html")
+
+
+@app.get("/about", response_class=FileResponse)
+async def about():
+    return FileResponse("about.html")
+
+
+@app.get("/features", response_class=FileResponse)
+async def features():
+    return FileResponse("features.html")
+
+
+@app.get("/api-page", response_class=FileResponse)
+async def api_page():
+    return FileResponse("api.html")
+
+
+@app.get("/app.js")
+async def serve_app_js():
+    return FileResponse("app.js", media_type="application/javascript")
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -160,5 +170,5 @@ if __name__ == "__main__":
         "main:app",
         host="0.0.0.0",
         port=8000,
-        reload=True
+        reload=False
     )

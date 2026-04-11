@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" type="image/png" href="http://127.0.0.1:8000/static/favicon.ico" sizes="32x32">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https://www.genderpredictionkhmer.site https://cloudflareinsights.com; img-src 'self' data:;" />
+  <link rel="icon" type="image/png" href="/static/favicon.ico" sizes="32x32">
   <title>ទាយភេទ</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="/static/style.css" />
   <style>
     /* API status badge */
     .api-badge {
@@ -30,7 +31,7 @@
 <body>
 <header class="site-header">
   <div class="nav">
-    <a class="brand" href="#">
+    <a class="brand" href="/">
      <span class="logo" aria-hidden="true"></span>
       <span class="brand-text">ការទស្សន៏ទាយភេទតាមរយៈឈ្មោះ</span>
     </a>
@@ -39,11 +40,9 @@
     </button>
 
     <nav class="menu" id="menu">
-      <a href="#features">មុខងារ</a>
-      <a href="#docs">ទាញយក API</a>
-      <a href="#pricing">អំពី</a>
-      <a class="menu-login" href="#login">ចូលប្រើ</a>
-      <button class="menu-register" type="button" id="registerBtn">ចុះឈ្មោះ</button>
+      <a href="features.html">មុខងារ</a>
+      <a href="api.html">ទាញយក API</a>
+      <a href="about.html">អំពី</a>
     </nav>
   </div>
 </header>
@@ -73,11 +72,6 @@
           </div>
           <button class="btn-primary" id="guessBtn" type="button">ស្វែងរក</button>
         </div>
-        <div class="chips" aria-label="មុខងារពេញនិយម">
-          <span class="label">មុខងារ:</span>
-          <button class="chip active" data-mode="gender"    type="button">ភេទ</button>
-          <button class="chip"        data-mode="split"     type="button">បំបែកឈ្មោះ</button>
-        </div>
 
         <div class="result" id="resultBox" aria-live="polite">
           <div class="result-row">
@@ -88,20 +82,7 @@
             <div class="badge" id="resultBadge">ភាពទុកចិត្ត: --</div>
           </div>
         </div>
-        <!-- <div class="stats" aria-label="ស្ថិតិ">
-          <div class="stat">
-            <div class="num">KCC</div>
-            <div class="cap">Khmer Character Cluster</div>
-          </div>
-          <div class="stat">
-            <div class="num">BiLSTM</div>
-            <div class="cap">Deep Learning Model</div>
-          </div>
-          <div class="stat">
-            <div class="num">FastText</div>
-            <div class="cap">Embedding Layer</div>
-          </div>
-        </div> -->
+       
       </div>
 
       <aside class="hero-right">
@@ -109,98 +90,17 @@
           <div class="hint-title">របៀបប្រើ</div>
           <div class="hint-body">
             ១. វាយឈ្មោះខ្មែរ ហើយចុច <strong>ទស្សន៏ទាយ</strong><br/><br/>
-            ២. លទ្ធផលនឹងបង្ហាញភេទ + ភាពទុកចិត្ត + ការបំបែកពាក្យ
+            ២. លទ្ធផលនឹងបង្ហាញភេទ និងភាពទុកចិត្ត
           </div>
         </div>
       </aside>
     </div>
   </section>
 
-  <section class="section" id="docs">
-    <div class="section-card">
-      <h3>ទាញយក API</h3>
-      <p>
-        អ្នកអភិវឌ្ឍន៍អាចភ្ជាប់ API នេះទៅកាន់កម្មវិធីរបស់អ្នកបានដោយផ្ញើ
-        សំណើ HTTP មកកាន់ endpoint ខាងក្រោម។
-      </p>
-
-      <h4 style="margin-top:1.2rem">ទស្សន៍ទាយឈ្មោះតែមួយ</h4>
-      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>POST /predict
-Content-Type: application/json
-
-{
-  "name": "ចន្ទា"
-}</code></pre>
-      <p>លទ្ធផលដែលទទួលបាន៖</p>
-      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>{
-  "name": "ចន្ទា",
-  "gender": "Female",
-  "confidence": 99.91,
-  "probability": 0.9991,
-  "kccs": ["ច", "ន្ទា"]
-}</code></pre>
-
-      <h4 style="margin-top:1.2rem">ទស្សន៍ទាយជាក្រុម (អតិបរមា ១០០ ឈ្មោះ)</h4>
-      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>POST /batch_predict
-Content-Type: application/json
-
-{
-  "names": ["ចន្ទា", "សុខ", "រដ្ឋា"]
-}</code></pre>
-
-      <h4 style="margin-top:1.2rem">ពិនិត្យស្ថានភាព API</h4>
-      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>GET /health</code></pre>
-
-      <h4 style="margin-top:1.2rem">ឧទាហរណ៍ជាមួយ JavaScript</h4>
-      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>const res = await fetch('https://yourdomain.com/predict', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ name: 'ចន្ទា' })
-});
-const data = await res.json();
-console.log(data.gender, data.confidence);</code></pre>
-
-      <h4 style="margin-top:1.2rem">ឧទាហរណ៍ជាមួយ Python</h4>
-      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>import requests
-
-res = requests.post('https://yourdomain.com/predict',
-                    json={'name': 'ចន្ទា'})
-print(res.json())</code></pre>
-
-      <p style="margin-top:1rem">
-        សម្រាប់ឯកសារពេញលេញ សូមចូលទៅកាន់
-        <a href="/docs" style="color:#6366f1;font-weight:600">/docs</a>
-        (Swagger UI) បន្ទាប់ពីដំណើរការ API ។
-      </p>
-    </div>
-  </section>
-
-  <section class="section" id="pricing">
-    <div class="section-card">
-      <h3>អំពីគម្រោង</h3>
-      <p>
-        គម្រោងនេះត្រូវបានបង្កើតឡើងដើម្បីជួយកំណត់ភេទតាមរយៈឈ្មោះខ្មែរ
-        ដោយប្រើប្រាស់បញ្ញាសិប្បនិម្មិត។ ឈ្មោះខ្មែរជាច្រើនមានលក្ខណៈពិសេស
-        ដែលអាចបង្ហាញពីភេទបានដោយប្រយោល ប៉ុន្តែការវិភាគដោយដៃច្រើនតែចំណាយ
-        ពេលវេលា និងកំហុសអាចកើតមានបាន។
-      </p>
-      <p>
-        ដោយប្រើប្រាស់បច្ចេកវិទ្យា AI ដ៏ទំនើប ប្រព័ន្ធអាចទស្សន៍ទាយភេទ
-        ប្រកបដោយភាពត្រឹមត្រូវ និងភាពឆាប់រហ័ស ដោយមិនចាំបាច់ពឹងផ្អែកលើ
-        មនុស្សក្នុងការកំណត់ឡើយ។
-      </p>
-      <p>
-        គម្រោងនេះមានប្រយោជន៍សម្រាប់ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ
-        ការស្រាវជ្រាវ ក៏ដូចជាកម្មវិធីដែលត្រូវការចាត់ថ្នាក់ភេទ
-        ពីឈ្មោះអ្នកប្រើប្រាស់ជាភាសាខ្មែរ។
-      </p>
-    </div>
-  </section>
-
   <section class="section" id="features">
     <div class="section-card">
       <h3>រក្សាសិទ្ធដោយ</h3>
-     <p>© <span id="year"></span></p>
+        <p>© <span id="year"></span> genderpredictionkhmer</p>
     </div>
   </section>
 </main>

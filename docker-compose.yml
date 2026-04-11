@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount large model files externally (not baked into image)
+      - ./optimized_gender_model.pt:/app/optimized_gender_model.pt
+      - ./cc.km.300.vec.gz:/app/cc.km.300.vec.gz
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: >
+      tunnel --no-autoupdate run 
+      --token eyJhIjoiZjU5ZGQyNTAzYTM1MDQwNTExN2E2M2NiZTJhNjc0NTMiLCJ0IjoiNTVlMTdmYjUtMzM5MC00ZjFkLTg5YzQtYjczNWVjZmUxMmEwIiwicyI6Ik1EaGxaVFUyWkRZdFkySmpNQzAwWW1Oa0xUazFOMkl0WlRsbFptRm1NekU1TldReSJ9

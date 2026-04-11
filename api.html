@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="km">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https://www.genderpredictionkhmer.site https://cloudflareinsights.com; img-src 'self' data:;" />
+  <link rel="icon" type="image/png" href="/static/favicon.ico" sizes="32x32">
+  <title>ទាញយក API — ការទស្សន៏ទាយភេទ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+<header class="site-header">
+  <div class="nav">
+    <a class="brand" href="/">
+      <span class="logo" aria-hidden="true"></span>
+      <span class="brand-text">ការទស្សន៏ទាយភេទតាមរយៈឈ្មោះ</span>
+    </a>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="បើកម៉ឺនុយ" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="menu" id="menu">
+      <a href="features.html">មុខងារ</a>
+      <a href="api.html" style="color:var(--brand)">ទាញយក API</a>
+      <a href="about.html">អំពី</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="section">
+    <div class="section-card">
+      <h3>ទាញយក API</h3>
+      <p>
+        អ្នកអភិវឌ្ឍន៍អាចភ្ជាប់ API នេះទៅកាន់កម្មវិធីរបស់អ្នកបានដោយផ្ញើ
+        សំណើ HTTP មកកាន់ endpoint ខាងក្រោម។
+      </p>
+      <h4 style="margin-top:1.2rem">ទស្សន៍ទាយឈ្មោះតែមួយ</h4>
+      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>POST /predict
+        Content-Type: application/json
+        {
+          "name": "ចន្ទា"
+        }</code></pre>
+      <p>លទ្ធផលដែលទទួលបាន៖</p>
+      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>
+      {
+        "name": "ចន្ទា",
+        "gender": "Female",
+        "confidence": 99.91,
+        "probability": 0.9991,
+        "kccs": ["ច", "ន្ទា"]
+      }</code></pre>
+
+      <h4 style="margin-top:1.2rem">ទស្សន៍ទាយជាក្រុម (អតិបរមា ១០០ ឈ្មោះ)</h4>
+      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>POST /batch_predict
+      Content-Type: application/json
+
+      {
+        "names": ["ចន្ទា", "សុខ", "រដ្ឋា"]
+      }</code></pre>
+
+      <h4 style="margin-top:1.2rem">ពិនិត្យស្ថានភាព API</h4>
+      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>GET /health</code></pre>
+
+      <h4 style="margin-top:1.2rem">ឧទាហរណ៍ជាមួយ JavaScript</h4>
+      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>const res = await fetch('https://www.genderpredictionkhmer.site/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: 'ចន្ទា' })
+      });
+      const data = await res.json();
+      console.log(data.gender, data.confidence);</code></pre>
+
+      <h4 style="margin-top:1.2rem">ឧទាហរណ៍ជាមួយ Python</h4>
+      <pre style="background:#f1f5f9;padding:1rem;border-radius:8px;overflow-x:auto;font-size:13px"><code>import requests
+
+      res = requests.post('https://www.genderpredictionkhmer.site/predict',
+                          json={'name': 'ចន្ទា'})
+      print(res.json())</code></pre>
+
+      <p style="margin-top:1rem">
+        សម្រាប់ឯកសារពេញលេញ សូមចូលទៅកាន់
+        <a href="/docs" style="color:#6366f1;font-weight:600">/docs</a>
+        (Swagger UI) បន្ទាប់ពីដំណើរការ API ។
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-card">
+      <h3>រក្សាសិទ្ធដោយ</h3>
+         <p>© <span id="year"></span> genderpredictionkhmer</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const menuBtn = document.getElementById('menuBtn');
+  const menu    = document.getElementById('menu');
+  if (menuBtn && menu) {
+    menuBtn.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open);
+    });
+  }
+</script>
+</body>
+</html>
